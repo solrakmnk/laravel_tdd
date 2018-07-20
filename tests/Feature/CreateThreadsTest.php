@@ -23,9 +23,38 @@ class CreateThreadsTest extends TestCase
     function an_authenticated_user_can_create_new_forum_threads(){
         //$this->actingAs(create('App\User'));
         $this->signIn();
-        $thread=create('App\Thread');
-        $this->post('/threads',$thread->toArray());
-        $this->get($thread->path())
+        $thread=make('App\Thread');
+        $response=$this->post('/threads',$thread->toArray());
+
+        $this->get($response->headers->get('location'))
             ->assertSee($thread->title);
+    }
+
+    /** @test */
+    function a_thread_requires_a_title(){
+        $this->publishThread(['title'=>null])
+            ->assertSessionHasErrors('title');
+    }
+
+    /** @test */
+    function a_thread_requires_a_body(){
+        $this->publishThread(['body'=>null])
+            ->assertSessionHasErrors('body');
+    }
+    /** @test */
+    function a_thread_requires_a_valid_channel(){
+        //$channel=create('App\Channel');
+        //if channel with id exist it will fails
+
+        $this->publishThread(['channel_id'=>1])
+            ->assertSessionHasErrors('channel_id');
+    }
+
+    public function publishThread($overrides=[]){
+        $this->withExceptionHandling()->signIn();
+
+        $thread=make('App\Thread',$overrides);
+
+        return $this->post('/threads',$thread->toArray());
     }
 }
