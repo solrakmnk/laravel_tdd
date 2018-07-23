@@ -50,6 +50,7 @@ class CreateThreadsTest extends TestCase
             ->assertSessionHasErrors('channel_id');
     }
 
+    /** @test */
     public function publishThread($overrides=[]){
         $this->withExceptionHandling()->signIn();
 
