@@ -52,6 +52,20 @@
                 ->assertDontSee($threadWithoutChannel->title);
         }
 
+        /** @test */
+        public function  a_user_can_filter_threads_by_any_username(){
+            $this->signIn(create('App\User',['name'=>'CarlosGuevara']));
+            $threadsByCarlos=create('App\Thread',['user_id'=>auth()->user()->id]);
+            $threadsNotByCarlos=create('App\Thread');
+
+            $this->get('threads?by=CarlosGuevara')
+                ->assertSee($threadsByCarlos->title)
+                ->assertDontSee($threadsNotByCarlos);
+
+
+
+        }
+
     }
 
 
