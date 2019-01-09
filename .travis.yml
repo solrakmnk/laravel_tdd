@@ -4,7 +4,7 @@ php:
   - '5.6'
   - '7.0'
   
-before_script: composer install --no-iteraction
+before_script: composer install --no-interaction
 
 script:
   - vendor/bin/phpunit
